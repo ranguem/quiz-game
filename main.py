@@ -53,11 +53,11 @@ def read_text(prompt):
         return text
 
 
-def play_quiz(quizzes):
-    """퀴즈를 순서대로 출제하고 맞힌 개수를 반환한다."""
+def play_quiz(quizzes, best_score):
+    """퀴즈를 출제하고, 갱신된(또는 기존) 최고 점수를 반환한다."""
     if not quizzes:
         print("\n⚠️ 등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.\n")
-        return None
+        return best_score
 
     total = len(quizzes)
     correct = 0
@@ -72,7 +72,7 @@ def play_quiz(quizzes):
         answer = read_number("정답 입력: ", 1, 4)
         if answer is None:
             print("퀴즈를 중단합니다.")
-            return None
+            return best_score
 
         if quiz.is_correct(answer):
             print("✅ 정답입니다!")
@@ -83,8 +83,11 @@ def play_quiz(quizzes):
     score = int(correct / total * 100)
     print("\n" + "=" * 40)
     print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
+    if best_score is None or score > best_score["score"]:
+        print("🎉 새로운 최고 점수입니다!")
+        best_score = {"score": score, "correct": correct, "total": total}
     print("=" * 40 + "\n")
-    return correct
+    return best_score
 
 
 def add_quiz(quizzes):
@@ -124,8 +127,21 @@ def list_quizzes(quizzes):
     print("-" * 40 + "\n")
 
 
+def show_best_score(best_score):
+    """최고 점수를 출력한다."""
+    if best_score is None:
+        print("\n⚠️ 아직 퀴즈를 풀지 않았습니다. 먼저 퀴즈를 풀어 보세요.\n")
+        return
+
+    print(
+        f"\n🏆 최고 점수: {best_score['score']}점 "
+        f"({best_score['total']}문제 중 {best_score['correct']}문제 정답)\n"
+    )
+
+
 def main():
     quizzes = get_default_quizzes()
+    best_score = None
 
     while True:
         show_menu()
@@ -135,13 +151,13 @@ def main():
             print("\n👋 게임을 종료합니다.")
             break
         elif choice == 1:
-            play_quiz(quizzes)
+            best_score = play_quiz(quizzes, best_score)
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
             list_quizzes(quizzes)
         elif choice == 4:
-            print("\n[점수 확인] 준비 중입니다.\n")
+            show_best_score(best_score)
 
 
 if __name__ == "__main__":
