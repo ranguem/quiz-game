@@ -38,6 +38,21 @@ def read_number(prompt, min_value, max_value):
         return number
 
 
+def read_text(prompt):
+    """비어 있지 않은 문자열을 입력받는다. Ctrl+C / EOF 시 None 반환."""
+    while True:
+        try:
+            text = input(prompt).strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\n입력이 중단되었습니다.")
+            return None
+
+        if text == "":
+            print("⚠️ 입력이 비어 있습니다. 다시 입력하세요.")
+            continue
+        return text
+
+
 def play_quiz(quizzes):
     """퀴즈를 순서대로 출제하고 맞힌 개수를 반환한다."""
     if not quizzes:
@@ -70,19 +85,6 @@ def play_quiz(quizzes):
     print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
     print("=" * 40 + "\n")
     return correct
-def read_text(prompt):
-    """비어 있지 않은 문자열을 입력받는다. Ctrl+C / EOF 시 None 반환."""
-    while True:
-        try:
-            text = input(prompt).strip()
-        except (KeyboardInterrupt, EOFError):
-            print("\n입력이 중단되었습니다.")
-            return None
-
-        if text == "":
-            print("⚠️ 입력이 비어 있습니다. 다시 입력하세요.")
-            continue
-        return text
 
 
 def add_quiz(quizzes):
@@ -109,6 +111,19 @@ def add_quiz(quizzes):
     return True
 
 
+def list_quizzes(quizzes):
+    """등록된 퀴즈 목록을 출력한다."""
+    if not quizzes:
+        print("\n⚠️ 등록된 퀴즈가 없습니다.\n")
+        return
+
+    print(f"\n📋 등록된 퀴즈 목록 (총 {len(quizzes)}개)\n")
+    print("-" * 40)
+    for number, quiz in enumerate(quizzes, start=1):
+        print(f"[{number}] {quiz.question}")
+    print("-" * 40 + "\n")
+
+
 def main():
     quizzes = get_default_quizzes()
 
@@ -124,7 +139,7 @@ def main():
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
-            print("\n[퀴즈 목록] 준비 중입니다.\n")
+            list_quizzes(quizzes)
         elif choice == 4:
             print("\n[점수 확인] 준비 중입니다.\n")
 
