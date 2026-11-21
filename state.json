@@ -69,11 +69,21 @@
                 "< >"
             ],
             "answer": 3
+        },
+        {
+            "question": "다음 중 오답을 고르시오",
+            "choices": [
+                "정답",
+                "오답",
+                "정답",
+                "정답"
+            ],
+            "answer": 2
         }
     ],
     "best_score": {
-        "score": 14,
-        "correct": 1,
-        "total": 7
+        "score": 37,
+        "correct": 3,
+        "total": 8
     }
 }
