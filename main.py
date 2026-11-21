@@ -1,4 +1,5 @@
 from default_quizzes import get_default_quizzes
+from quiz import Quiz
 
 
 def show_menu():
@@ -69,6 +70,43 @@ def play_quiz(quizzes):
     print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
     print("=" * 40 + "\n")
     return correct
+def read_text(prompt):
+    """비어 있지 않은 문자열을 입력받는다. Ctrl+C / EOF 시 None 반환."""
+    while True:
+        try:
+            text = input(prompt).strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\n입력이 중단되었습니다.")
+            return None
+
+        if text == "":
+            print("⚠️ 입력이 비어 있습니다. 다시 입력하세요.")
+            continue
+        return text
+
+
+def add_quiz(quizzes):
+    """새 퀴즈를 입력받아 목록에 추가한다."""
+    print("\n📌 새로운 퀴즈를 추가합니다.\n")
+
+    question = read_text("문제를 입력하세요: ")
+    if question is None:
+        return False
+
+    choices = []
+    for i in range(1, 5):
+        choice = read_text(f"선택지 {i}: ")
+        if choice is None:
+            return False
+        choices.append(choice)
+
+    answer = read_number("정답 번호 (1-4): ", 1, 4)
+    if answer is None:
+        return False
+
+    quizzes.append(Quiz(question, choices, answer))
+    print("\n✅ 퀴즈가 추가되었습니다!\n")
+    return True
 
 
 def main():
@@ -84,7 +122,7 @@ def main():
         elif choice == 1:
             play_quiz(quizzes)
         elif choice == 2:
-            print("\n[퀴즈 추가] 준비 중입니다.\n")
+            add_quiz(quizzes)
         elif choice == 3:
             print("\n[퀴즈 목록] 준비 중입니다.\n")
         elif choice == 4:
